@@ -3,17 +3,27 @@
 ; since the parameters that go here are not all obvious.
 ;
 ; Format:
-;   [section] ; section goes to [section] group in globals.gd
+;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
 config_version=5
 
 [application]
 
-config/name="IT-15 Godot Beginner Tutorials"
-config/features=PackedStringArray("4.3", "Forward Plus")
+config/name="Spiel"
+run/main_scene="uid://c7vjxmkp5xrod"
+config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
 
 [rendering]
 
-renderer/rendering_method="mobile"
+rendering_device/driver.windows="d3d12"
