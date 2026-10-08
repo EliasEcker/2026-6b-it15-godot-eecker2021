@@ -1,10 +1,12 @@
 extends Sprite2D
 
-# Geschwindigkeit in Pixel pro Sekunde
+signal health_depleted(final_score: int)
+
 @export var speed: float = 400.0
 
 func _ready() -> void:
 	print("Player initialisiert am BRG Kepler!")
+	
 
 func _process(delta: float) -> void:
 	var direction: Vector2 = Vector2.ZERO
@@ -22,3 +24,6 @@ func _process(delta: float) -> void:
 		direction = direction.normalized()
 
 	position += direction * speed * delta
+
+func take_damage() -> void: # z. B. bei 0 Lebenspunkten: 
+	health_depleted.emit(100)
