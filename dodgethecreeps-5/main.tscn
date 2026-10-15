@@ -1,0 +1,82 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://main.gd" id="1"]
+[ext_resource type="PackedScene" path="res://player.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://mob.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://hud.tscn" id="4"]
+[ext_resource type="Script" path="res://background_grid.gd" id="5"]
+
+[sub_resource type="Curve2D" id="Curve2D_1"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 480, 0, 0, 0, 0, 0, 480, 720, 0, 0, 0, 0, 0, 720, 0, 0, 0, 0, 0, 0)
+}
+point_count = 5
+
+[sub_resource type="Gradient" id="Gradient_bg"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.05, 0.06, 0.18, 1, 0.2, 0.07, 0.3, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bg"]
+gradient = SubResource("Gradient_bg")
+width = 480
+height = 720
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
+
+[node name="Main" type="Node"]
+script = ExtResource("1")
+mob_scene = ExtResource("3")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = SubResource("GradientTexture2D_bg")
+centered = false
+
+[node name="Grid" type="Node2D" parent="."]
+script = ExtResource("5")
+
+[node name="Stars" type="CPUParticles2D" parent="."]
+position = Vector2(240, 745)
+amount = 45
+lifetime = 18.0
+preprocess = 18.0
+emission_shape = 3
+emission_rect_extents = Vector2(240, 4)
+direction = Vector2(0, -1)
+spread = 8.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 25.0
+initial_velocity_max = 55.0
+scale_amount_min = 1.5
+scale_amount_max = 4.0
+color = Color(0.7, 0.85, 1, 0.35)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(240, 360)
+
+[node name="Player" parent="." instance=ExtResource("2")]
+
+[node name="MobTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="ScoreTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="StartPosition" type="Marker2D" parent="."]
+position = Vector2(240, 450)
+
+[node name="MobPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_1")
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
+
+[node name="HUD" parent="." instance=ExtResource("4")]
+
+[connection signal="hit" from="Player" to="." method="_on_player_hit"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
+[connection signal="start_game" from="HUD" to="." method="new_game"]
